@@ -6,19 +6,7 @@ This is an **AI-powered HR chatbot** using **Azure OpenAI + Azure Cognitive Sear
 - 🧼 Streamlit frontend (chat UI)
 - 🔎 Azure Cognitive Search (RAG - Retrieval-Augmented Generation)
 
-## 🚀 Project Structure
-azure_rag_chatbot/
-│
-├── .env # Contains Azure API keys (NOT pushed)
-│
-├── backend/
-│ ├── app.py # Flask API
-│ ├── config.py # Environment loader
-│ └── requirements.txt # Backend deps
-│
-├── frontend/
-│ ├── web_ui.py # Streamlit UI
-│ └── requirements.txt # Frontend deps
+## Run the app
 
 ### Clone the repo
 ```bash

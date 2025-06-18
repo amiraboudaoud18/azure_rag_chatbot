@@ -1,4 +1,3 @@
-
 from flask import Flask, request, jsonify
 from openai import AzureOpenAI
 import config
@@ -93,23 +92,25 @@ def chat():
         "Base de données RH interne"
     ]
 
+    context_base = """
+    Ta mission est d’accompagner les salariés en répondant à leurs questions RH de manière précise, claire et conforme à la documentation officielle de l’entreprise. Tu aides les employés à comprendre leurs droits, leurs fiches de paie, le règlement intérieur et la convention collective.
+    Sois factuel, professionnel, synthétique et aimable.
+    Tu peux poser des questions de clarification si la demande est ambiguë.
+    Tu dois répondre uniquement selon les documents internes et les autorisations du collaborateur. Si l’information n’est pas disponible, indique-le clairement. Tu ne dois pas inventer de contenu.
+    Quand tu donnes une information, indique uniquement le nom du document utilisé comme référence, par exemple : [Base de données RH interne].
+    À la fin de ta réponse, ajoute une section "Références utilisées" listant uniquement le ou les noms de documents utilisés pour répondre (pas les champs du tableau).
+    """
+
     if target_data:
-        infos = "\n".join([f"{k}: {v}" for k, v in target_data.items()])
-        docs = ", ".join(document_references)
-        system_content = f"""Tu es un assistant RH pour l’entreprise Contoso SAS.
-Voici les informations RH de la personne concernée :
-{infos}
-Quand tu donnes une information, indique uniquement le nom du document utilisé comme référence, par exemple : [Base de données RH interne].
-À la fin de ta réponse, ajoute une section "Références utilisées" listant uniquement le ou les noms de documents utilisés pour répondre (pas les champs du tableau).
-"""
+        intro = f"Tu aides {user_info['nom']} ({user_info['poste']} - {user_info['departement']})."
     else:
-        docs = ", ".join(document_references)
-        system_content = f"""Tu es un assistant RH pour l’entreprise Contoso SAS.
-Tu aides {user_info['nom']} ({user_info['poste']} - {user_info['departement']}). 
-Tu dois répondre uniquement selon les documents internes et les autorisations du collaborateur.
-Quand tu donnes une information, indique uniquement le nom du document utilisé comme référence, par exemple : [Base de données RH interne].
-À la fin de ta réponse, ajoute une section "Références utilisées" listant uniquement le ou les noms de documents utilisés pour répondre (pas les champs du tableau).
-"""
+        intro = "Tu aides les salariés de l’entreprise Contoso SAS."
+
+    system_content = f"""Tu es un assistant RH pour l’entreprise Contoso SAS.
+    {intro}
+    {context_base}
+    """
+
 
     prompt = [
         {"role": "system", "content": system_content},
@@ -150,4 +151,4 @@ Quand tu donnes une information, indique uniquement le nom du document utilisé 
     return jsonify({"reply": completion.choices[0].message.content.strip()})
 
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=5001)
+    app.run(debug=True, host="0.0.0.0", port=5000)

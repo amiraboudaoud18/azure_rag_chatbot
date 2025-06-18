@@ -118,13 +118,36 @@ Quand tu donnes une information, indique uniquement le nom du document utilisé 
 
     completion = client.chat.completions.create(
         model=model,
-        messages=prompt,
+        messages=prompt,  # contient user_info + RH data ou fallback
         temperature=0.7,
         top_p=0.9,
-        max_tokens=2048
+        max_tokens=2048,
+        extra_body={
+            "data_sources": [
+                {
+                    "type": "azure_search",
+                    "parameters": {
+                        "endpoint": config.AZURE_SEARCH_ENDPOINT,
+                        "index_name": config.AZURE_SEARCH_INDEX,
+                        "semantic_configuration": config.AZURE_SEARCH_SEMANTIC,
+                        "query_type": "vector_semantic_hybrid",
+                        "top_n_documents": 5,
+                        "authentication": {
+                            "type": "api_key",
+                            "key": config.AZURE_SEARCH_KEY
+                        },
+                        "embedding_dependency": {
+                            "type": "deployment_name",
+                            "deployment_name": "text-embedding-ada-002"  # ✅ nom exact du déploiement embeddings
+                        }
+                    }
+                }
+            ]
+        }
     )
+
 
     return jsonify({"reply": completion.choices[0].message.content.strip()})
 
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=5000)
+    app.run(debug=True, host="0.0.0.0", port=5001)

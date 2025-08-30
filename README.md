@@ -2,9 +2,11 @@
 
 This is an **AI-powered HR chatbot** using **Azure OpenAI + Azure Cognitive Search**, built with:
 
-- 🔥 Flask backend (API)
-- 🧼 Streamlit frontend (chat UI)
-- 🔎 Azure Cognitive Search (RAG - Retrieval-Augmented Generation)
+![example image](example_image.png)
+
+- Flask backend (API)
+- Streamlit frontend (chat UI)
+- Azure Cognitive Search (RAG - Retrieval-Augmented Generation)
 
 ## Run the app
 
